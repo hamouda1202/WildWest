@@ -9,7 +9,8 @@ public class Gun : MonoBehaviour
     public float damage = 10f;
     public float range = 100f;
     public Camera fpsCam;
-    public GameObject muzzleFlash;
+    private Animator anim;
+    public ParticleSystem muzzleFleh;
 
     [Header("Laser")]
     public GameObject laser;
@@ -17,24 +18,27 @@ public class Gun : MonoBehaviour
     public float fadeDuration = 0.3f;
 
 
-    private void Start()
+    private void Awake()
     {
-        muzzleFlash.SetActive(false);
+        anim = GetComponent<Animator>();
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
         {
+            anim.SetBool("isShooting", true);
             Shoot();
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            anim.SetBool("isShooting", false);
         }
     }
 
     void Shoot()
     {
-        muzzleFlash.SetActive(true);
-        StartCoroutine(wait());
+        muzzleFleh.Play();
+        anim.SetTrigger("Shoot");
         RaycastHit hit;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
@@ -50,11 +54,6 @@ public class Gun : MonoBehaviour
         {
             CreateLaser(fpsCam.transform.position + fpsCam.transform.forward * range);
         }
-    }
-    IEnumerator wait()
-    {
-        yield return new WaitForSeconds(0.12f);
-        muzzleFlash.SetActive(false);
     }
 
     void CreateLaser(Vector3 end)

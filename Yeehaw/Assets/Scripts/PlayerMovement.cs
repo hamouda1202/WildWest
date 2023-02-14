@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Some stupid rigidbody based movement by Dani
+
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
